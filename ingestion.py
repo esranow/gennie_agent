@@ -1,6 +1,16 @@
 import os
+import streamlit as st
 from dotenv import load_dotenv
+
+# Load for local dev
 load_dotenv()
+
+def get_secret(key):
+    try:
+        return st.secrets[key]
+    except Exception:
+        return os.getenv(key)
+
 
 from llama_index.core import VectorStoreIndex, StorageContext, Settings
 from llama_index.core.node_parser import SentenceSplitter
@@ -22,19 +32,19 @@ splitter = SentenceSplitter(chunk_size=512, chunk_overlap=64, paragraph_separato
 
 Settings.llm = Gemini(
     model="models/gemini-2.5-pro",
-    api_key=os.getenv("GEMINI_KEY"),
+    api_key=get_secret("GEMINI_KEY"),
     temperature=0.1,
     transport="rest",
 )
 Settings.embed_model = GeminiEmbedding(
     model_name="models/gemini-embedding-001",
-    api_key=os.getenv("GEMINI_KEY"),
+    api_key=get_secret("GEMINI_KEY"),
     transport="rest",
 )
 Settings.transformations = [splitter]
 
 def build_index() -> VectorStoreIndex:
-    parser = LlamaParse(api_key=os.getenv("LLAMA_KEY"), result_type="markdown", verbose=True)
+    parser = LlamaParse(api_key=get_secret("LLAMA_KEY"), result_type="markdown", verbose=True)
     data_dir = Path("./data")
     raw_docs = []
     if data_dir.exists():

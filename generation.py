@@ -1,17 +1,27 @@
 import os
 import re
 import tiktoken
+import streamlit as st
 from dotenv import load_dotenv
+
+# Load for local dev
+load_dotenv()
+
+def get_secret(key):
+    try:
+        return st.secrets[key]
+    except Exception:
+        return os.getenv(key)
+
 from langsmith import traceable
 from routing import run_local
 
-load_dotenv()
 from llama_index.core import Settings
 from llama_index.llms.gemini import Gemini
 
 Settings.llm = Gemini(
     model="models/gemini-2.5-pro",
-    api_key=os.getenv("GEMINI_KEY"),
+    api_key=get_secret("GEMINI_KEY"),
     temperature=0.1,
     transport="rest",
 )

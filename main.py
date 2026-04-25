@@ -1,10 +1,20 @@
 import json
 import time
+import os
+import streamlit as st
 from fastapi import FastAPI
 from pydantic import BaseModel
 from dotenv import load_dotenv
 
+# Load for local dev
 load_dotenv()
+
+def get_secret(key):
+    try:
+        return st.secrets[key]
+    except Exception:
+        return os.getenv(key)
+
 
 from retrieval import retrieve
 from search import web_search
