@@ -1,6 +1,5 @@
 import config, re, tiktoken
 from llama_index.core import Settings
-config.setup_llm()
 def generate(q, cks, ws, be):
     md = []
     for c in cks + ws:

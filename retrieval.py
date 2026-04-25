@@ -1,11 +1,13 @@
 import config
 from llama_index.core import VectorStoreIndex, StorageContext, Settings
 from llama_index.vector_stores.chroma import ChromaVectorStore
-config.setup_llm()
-vs = ChromaVectorStore(chroma_collection=config.co)
-sc = StorageContext.from_defaults(vector_store=vs)
 def retrieve(q):
-    if config.co.count() == 0: return [], False
+    try:
+        co = config.get_chroma()
+        if co.count() == 0: return [], False
+    except: return [], False
+    vs = ChromaVectorStore(chroma_collection=co)
+    sc = StorageContext.from_defaults(vector_store=vs)
     idx = VectorStoreIndex.from_vector_store(vs, storage_context=sc)
     nds = idx.as_retriever(similarity_top_k=3).retrieve(q)
     cks = [n.node.get_content() for n in nds]

@@ -3,6 +3,7 @@ from retrieval import retrieve
 from search import web_search
 from generation import generate
 from ingestion import build_index
+config.setup_llm()
 st.set_page_config(page_title="Spark", layout="wide")
 st.title("⚡ Spark RAG")
 with st.sidebar:

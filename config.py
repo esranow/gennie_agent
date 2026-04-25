@@ -4,8 +4,10 @@ except: st = None
 def get_sec(k):
     if st and k in st.secrets: return st.secrets[k]
     return os.getenv(k)
-cl = chromadb.PersistentClient(path="./chroma_db")
-co = cl.get_or_create_collection(name="rag_store", metadata={"hnsw:space":"cosine"})
+@st.cache_resource
+def get_chroma():
+    cl = chromadb.PersistentClient(path="./chroma_db")
+    return cl.get_or_create_collection(name="rag_store", metadata={"hnsw:space":"cosine"})
 def setup_llm():
     from llama_index.core import Settings
     from llama_index.llms.gemini import Gemini

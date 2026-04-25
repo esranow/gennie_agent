@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from retrieval import retrieve
 from search import web_search
 from generation import generate
+config.setup_llm()
 app = FastAPI()
 class QReq(BaseModel): q: str
 @app.post("/query")
