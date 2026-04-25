@@ -1,9 +1,9 @@
+python-dotenv
+streamlit
 fastapi
 uvicorn
 pydantic
 requests
-python-dotenv
-streamlit
 llama-index
 llama-parse
 llama-index-llms-gemini
@@ -19,4 +19,3 @@ torch
 accelerate
 pytest
 httpx
-
