@@ -13,9 +13,7 @@ def get_secret(key):
 
 
 from tavily import TavilyClient
-from langsmith import traceable
 
-@traceable
 def web_search(query: str) -> list[str]:
     client = TavilyClient(api_key=get_secret("TAVILY_API_KEY"))
     res = client.search(query=query, search_depth="basic", max_results=2)

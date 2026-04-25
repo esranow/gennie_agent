@@ -13,7 +13,6 @@ def get_secret(key):
     except Exception:
         return os.getenv(key)
 
-from langsmith import traceable
 from routing import run_local
 
 from llama_index.core import Settings
@@ -26,15 +25,8 @@ Settings.llm = Gemini(
     transport="rest",
 )
 
-@traceable
 def generate(query: str, chunks: list[str], web_results: list[str], backend: str) -> dict:
-    from langsmith.run_helpers import get_current_run
-    run = get_current_run()
-    if run:
-        tags = ["offline"] if backend == "local" else []
-        tags.append("rag+search" if web_results else "rag-only")
-        run.add_tags(tags)
-        
+
     merged = []
     for c in chunks + web_results:
         if c not in merged:

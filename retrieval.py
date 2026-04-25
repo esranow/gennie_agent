@@ -18,7 +18,6 @@ from llama_index.llms.gemini import Gemini
 from llama_index.embeddings.gemini import GeminiEmbedding
 from llama_index.vector_stores.chroma import ChromaVectorStore
 import chromadb
-from langsmith import traceable
 
 client = chromadb.PersistentClient(path="./chroma_db")
 collection = client.get_or_create_collection(
@@ -42,7 +41,6 @@ Settings.embed_model = GeminiEmbedding(
 )
 Settings.transformations = [splitter]
 
-@traceable
 def retrieve(query: str) -> tuple[list[str], bool]:
     index = VectorStoreIndex.from_vector_store(vector_store, storage_context=storage_context)
     retriever = index.as_retriever(similarity_top_k=3)
