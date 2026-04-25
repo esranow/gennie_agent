@@ -1,7 +1,6 @@
-import streamlit as st, time, os
+import streamlit as st, time, os, config
 from retrieval import retrieve
 from search import web_search
-from routing import get_backend
 from generation import generate
 from ingestion import build_index
 st.set_page_config(page_title="Spark", layout="wide")
@@ -22,8 +21,7 @@ if q:
     with st.status("Thinking..."):
         cks, suf = retrieve(q)
         ws = [] if suf else web_search(q)
-        be = get_backend()
-        res = generate(q, cks, ws, be)
+        res = generate(q, cks, ws, "gemini")
     st.metric("Latency", f"{(time.time()-t0)*1000:.0f}ms")
     st.markdown(res.get("final", ""))
     with st.expander("Debug"): st.write(res)

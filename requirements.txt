@@ -8,7 +8,7 @@ llama-index-core
 llama-index-llms-gemini
 llama-index-embeddings-gemini
 llama-index-vector-stores-chroma
-llama-parse
+llama-index-readers-llamaparse
 chromadb
 tavily-python
 tiktoken
