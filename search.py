@@ -1,20 +1,9 @@
-import os
-import streamlit as st
-from dotenv import load_dotenv
-
-# Load for local dev
-load_dotenv()
-
-def get_secret(key):
-    try:
-        return st.secrets[key]
-    except Exception:
-        return os.getenv(key)
-
-
+import os, streamlit as st
 from tavily import TavilyClient
-
-def web_search(query: str) -> list[str]:
-    client = TavilyClient(api_key=get_secret("TAVILY_API_KEY"))
-    res = client.search(query=query, search_depth="basic", max_results=2)
-    return [r["content"] for r in res.get("results", [])]
+def get_sec(k):
+    try: return st.secrets[k]
+    except: return os.getenv(k)
+def web_search(q):
+    c = TavilyClient(api_key=get_sec("TAVILY_API_KEY"))
+    r = c.search(query=q, search_depth="basic", max_results=2)
+    return [x["content"] for x in r.get("results", [])]

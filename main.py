@@ -1,61 +1,20 @@
-import json
-import time
-import os
-import streamlit as st
+import json, time, os, streamlit as st
 from fastapi import FastAPI
 from pydantic import BaseModel
-from dotenv import load_dotenv
-
-# Load for local dev
-load_dotenv()
-
-def get_secret(key):
-    try:
-        return st.secrets[key]
-    except Exception:
-        return os.getenv(key)
-
-
 from retrieval import retrieve
 from search import web_search
 from routing import get_backend
 from generation import generate
-
 app = FastAPI()
-
-class QueryReq(BaseModel):
-    query: str
-
+class QReq(BaseModel): q: str
 @app.post("/query")
-async def query_endpoint(req: QueryReq):
-    start = time.time()
-    query = req.query
-    
-    chunks, sufficient = retrieve(query)
-    web_results = []
-    if not sufficient:
-        web_results = web_search(query)
-        
-    backend = get_backend()
-    res = generate(query, chunks, web_results, backend)
-    
-    latency = (time.time() - start) * 1000
-    mode = "RAG+SEARCH" if web_results else "RAG"
-    
-    log_data = {
-        "mode": mode,
-        "backend": backend,
-        "latency_ms": latency,
-        "prompt_tokens": res["prompt_tokens"],
-        "completion_tokens": res["completion_tokens"]
-    }
-    print(json.dumps(log_data))
-    
-    return {
-        "mode": res["mode"],
-        "think": res["think"],
-        "final": res["final"],
-        "confidence": res["confidence"],
-        "backend": backend,
-        "latency_ms": latency
-    }
+async def q_ep(req: QReq):
+    st_t = time.time()
+    q = req.q
+    cks, suf = retrieve(q)
+    ws = [] if suf else web_search(q)
+    be = get_backend()
+    res = generate(q, cks, ws, be)
+    lt = (time.time() - st_t) * 1000
+    print(json.dumps({"mode":res["mode"], "latency":lt}))
+    return {**res, "latency":lt}

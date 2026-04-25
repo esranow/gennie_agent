@@ -1,9 +1,9 @@
-python-dotenv
 streamlit
 fastapi
 uvicorn
 pydantic
 requests
+python-dotenv
 llama-index-core
 llama-index-llms-gemini
 llama-index-embeddings-gemini
@@ -15,3 +15,4 @@ tiktoken
 google-generativeai
 pytest
 httpx
+pillow>=11.0.0
